@@ -85,7 +85,7 @@ def usage():
     print('Convert a Debian or an RPM Package into an Arch Linux package'
           ' (and vice-versa).')
     print()
-    print('Usage: %s [OPTIONS] debian_package.deb [arch_package.pkg.tar.gz]'
+    print('Usage: %s [OPTIONS] debian_package.deb [arch_package.pkg.tar.xz]'
           % os.path.basename(sys.argv[0]))
     print()
     print("OPTIONS :")
@@ -222,7 +222,7 @@ def convert(input_pkg, output_pkg=''):
 
     input_pkg contains the input package, with *.deb extension.
 
-    output_pkg contains the output package, with *.pkg.tar.gz extension. This
+    output_pkg contains the output package, with *.pkg.tar.xz extension. This
     argument is not obligatory.
 
     """
@@ -246,8 +246,8 @@ def convert(input_pkg, output_pkg=''):
         # Extraction of the deb archive
         os.system('ar x \'%s\'' % input_pkg)
 
-        if os.path.exists('data.tar.gz'):
-            data_path = 'data.tar.gz'
+        if os.path.exists('data.tar.xz'):
+            data_path = 'data.tar.xz'
         else:
             for found_data_path in os.listdir('.'):
                 if found_data_path.find('data.tar') == 0:
@@ -258,12 +258,12 @@ def convert(input_pkg, output_pkg=''):
                 print("The data archive wasn't found inside %s" % input_pkg)
                 sys.exit(1)
 
-        # Extraction of control.tar.gz and data.tar.x
+        # Extraction of control.tar.xz and data.tar.x
         os.system('tar xf \'%s\' -C \'%s\'' %
                   (os.path.join(input_tmpd, data_path),
                    output_tmpd))
         os.system('tar xf \'%s\'' %
-                  (os.path.join(input_tmpd, 'control.tar.gz')))
+                  (os.path.join(input_tmpd, 'control.tar.xz')))
 
         # Reading 'control' file, from the deb archive
         deb_info = read_debcontrol(os.path.join(input_tmpd, 'control'))
@@ -271,7 +271,7 @@ def convert(input_pkg, output_pkg=''):
         # If the output filename is not specified, it will be created
         if output_pkg == '':
             output_pkg = os.path.join(os.path.dirname(input_pkg),
-                                      '%s-%s-%s-%s''.pkg.tar.gz'
+                                      '%s-%s-%s-%s''.pkg.tar.xz'
                                       % (deb_info['name'], deb_info['version'],
                                          pkgrel, deb_info['architecture']))
 
